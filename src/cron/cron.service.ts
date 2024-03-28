@@ -17,11 +17,12 @@ export class CronService implements OnModuleInit {
   ) {}
 
   async onModuleInit() {
+    this.twilioService.initService();
     this.start();
   }
 
   start() {
-    const task = cron.schedule('*/1 * * * *', async () => {
+    const task = cron.schedule('*/10 * * * *', async () => {
       const match = await this.scraperService.scrape();
 
       if (!match) {
@@ -34,6 +35,7 @@ export class CronService implements OnModuleInit {
         return;
       }
 
+      console.log('Match found', (new Date()).toLocaleString());
       let avariableQuery: Query;
       try {
         avariableQuery = await this.prisma.query.create({

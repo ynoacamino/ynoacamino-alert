@@ -34,4 +34,24 @@ export class TwilioService {
       console.error(error);
     }
   }
+
+  async initService() {
+    const client = twilio(this.TWILIO_ACCOUNT_SID, this.TWILIO_AUTH_TOKEN);
+
+    const from = `whatsapp:${this.TWILIO_PHONE_NUMBER}`;
+
+    const messages = this.NUMBERS.map((number) => client.messages.create({
+      body: 'Hola, soy el bot que te avisara cuando la carrera de Ingeniería de Sistemas esté disponible para matrícula. Por favor, no respondas a este mensaje.',
+      from,
+      to: `whatsapp:${number}`,
+    }));
+
+    try {
+      const sends = await Promise.all(messages);
+
+      sends.forEach((send) => console.log(send));
+    } catch (error) {
+      console.error(error);
+    }
+  }
 }
