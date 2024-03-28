@@ -22,7 +22,7 @@ export class CronService implements OnModuleInit {
   }
 
   start() {
-    const task = cron.schedule('*/10 * * * *', async () => {
+    const task = cron.schedule('*/5 * * * *', async () => {
       const match = await this.scraperService.scrape();
 
       if (!match) {
