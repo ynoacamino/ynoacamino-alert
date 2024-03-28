@@ -18,9 +18,11 @@ export class TwilioService {
   async sendMessage() {
     const client = twilio(this.TWILIO_ACCOUNT_SID, this.TWILIO_AUTH_TOKEN);
 
+    const from = `whatsapp:${this.TWILIO_PHONE_NUMBER}`;
+
     const messages = this.NUMBERS.map((number) => client.messages.create({
       body: this.MESSAGE,
-      from: `whatsapp:${this.TWILIO_PHONE_NUMBER}`,
+      from,
       to: `whatsapp:${number}`,
     }));
 
