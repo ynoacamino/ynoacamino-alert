@@ -1,4 +1,4 @@
-import { z } from "zod";
+import { z } from 'zod';
 
 export const newQuerySchema = z.object({
   status: z.string(),
@@ -13,8 +13,9 @@ export const querySchema = z.object({
 });
 
 export enum QueryStatus {
-  AVARILABLE = "AVAILABLE",
-  PENDING = "PENDING",
+  AVARILABLE = 'AVAILABLE',
+  PENDING = 'PENDING',
+  TIMEOUT = 'TIMEOUT',
 }
 
 export type QueryType = {
