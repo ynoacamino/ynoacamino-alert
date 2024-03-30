@@ -12,15 +12,22 @@ export class MailController {
   ) {}
 
   @Get()
-  getMail(@Query('address') address: string) {
+  async getMail(@Query('address') address: string) {
     if (address) {
-      return this.mailService.getUniqueAddress({ address });
+      const mail = await this.mailService.getUniqueAddress({ address });
+
+      if (!mail) {
+        return {
+          error: 'Mail not found',
+        };
+      }
+      return mail;
     }
     return this.mailService.getAddress();
   }
 
   @Post()
-  sendMail(@Body() body: { address: string }) {
+  async sendMail(@Body() body: { address: string }) {
     const schema = z.object({
       address: z.string(),
     });
@@ -28,7 +35,15 @@ export class MailController {
     try {
       const query = schema.parse(body);
 
-      return this.mailService.crateAddress({ address: query.address });
+      const mail = await this.mailService.crateAddress({ address: query.address });
+
+      if (!mail) {
+        return {
+          error: 'Mail not created',
+        };
+      }
+
+      return mail;
     } catch (error: any) {
       return {
         error: error.errors,
@@ -37,7 +52,7 @@ export class MailController {
   }
 
   @Put()
-  updateMail(@Body() body: { address: string, active: boolean }) {
+  async updateMail(@Body() body: { address: string, active: boolean }) {
     const schema = z.object({
       address: z.string(),
       active: z.boolean(),
@@ -46,9 +61,16 @@ export class MailController {
     try {
       const query = schema.parse(body);
 
-      return this.mailService.changeActiveStatus({
+      const mail = await this.mailService.changeActiveStatus({
         active: query.active, address: query.address,
       });
+
+      if (!mail) {
+        return {
+          error: 'Mail not updated',
+        };
+      }
+      return mail;
     } catch (error: any) {
       return {
         error: error.errors,
