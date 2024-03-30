@@ -1,7 +1,9 @@
-import { Body, Controller, Get, Post } from '@nestjs/common';
-import { QueryService } from './query.service';
+import {
+  Body, Controller, Get, Post,
+} from '@nestjs/common';
 import { Query } from '@prisma/client';
 import { z } from 'zod';
+import { QueryService } from './query.service';
 
 @Controller('query')
 export class QueryController {
@@ -22,7 +24,6 @@ export class QueryController {
       const query = schema.parse(data);
 
       return this.queryService.create(query);
-
     } catch (error: any) {
       return {
         error: error.errors,
