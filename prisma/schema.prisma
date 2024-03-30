@@ -31,7 +31,8 @@ model Message {
 model MailAddress {
   id        Int      @id @default(autoincrement())
   createdAt DateTime @default(now())
-  address   String
+  address   String  @unique()
+  active    Boolean @default(true)
 
   messages  Message[]
 }
