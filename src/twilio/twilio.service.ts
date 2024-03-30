@@ -14,6 +14,7 @@ export class TwilioService {
   private readonly NUMBERS = [
     '+51935761921',
     '+51936762165',
+    '+51943606092',
   ];
 
   async sendMessage() {
