@@ -9,4 +9,4 @@ import { CronService } from './cron.service';
   providers: [CronService],
   imports: [PrismaModule, ScraperModule, TwilioModule, ResendModule],
 })
-export class cronModule {}
+export class CronModule {}
