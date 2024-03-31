@@ -17,7 +17,7 @@ export class CronService implements OnModuleInit {
   ) {}
 
   async onModuleInit() {
-    this.twilioService.initService();
+    // this.twilioService.initService();
     this.start();
   }
 
