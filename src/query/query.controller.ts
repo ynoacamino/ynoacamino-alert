@@ -1,7 +1,6 @@
 import {
-  Body, Controller, Get, Post,
+  Body, Controller, Get, Post, Query,
 } from '@nestjs/common';
-import { Query } from '@prisma/client';
 import { z } from 'zod';
 import { QueryService } from './query.service';
 
@@ -10,8 +9,14 @@ export class QueryController {
   constructor(private readonly queryService: QueryService) {}
 
   @Get()
-  findAll(): Promise<Query[]> {
-    return this.queryService.findAll();
+  async findAll(
+  @Query('skip') skip: string,
+  ) {
+    if (!skip) return this.queryService.findAll();
+    return {
+      querys: await this.queryService.findPart({ skip }),
+      info: await this.queryService.getInfo(),
+    };
   }
 
   @Post()
