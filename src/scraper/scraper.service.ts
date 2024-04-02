@@ -29,6 +29,17 @@ export class ScraperService {
         throw new Error('No se encontró el elemento');
       }
 
+      const match = contentText.includes(this.MATCH_WORD);
+      if (!match) {
+        console.log('No match found', (new Date()).toLocaleString());
+        this.prisma.query.create({
+          data: {
+            status: QueryStatus.PENDING,
+          },
+        }).catch(console.error);
+        return false;
+      }
+
       await window.close();
     } catch (error: any) {
       if (error.message !== 'No se encontró el elemento') {
@@ -41,7 +52,6 @@ export class ScraperService {
       return false;
     }
 
-    const match = contentText.includes(this.MATCH_WORD);
-    return match;
+    return true;
   }
 }

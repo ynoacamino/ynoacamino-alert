@@ -25,15 +25,7 @@ export class CronService implements OnModuleInit {
     const task = cron.schedule('*/5 * * * *', async () => {
       const match = await this.scraperService.scrape();
 
-      if (!match) {
-        console.log('No match found', (new Date()).toLocaleString());
-        this.prisma.query.create({
-          data: {
-            status: QueryStatus.PENDING,
-          },
-        }).catch(console.error);
-        return;
-      }
+      if (!match) return;
 
       console.log('Match found', (new Date()).toLocaleString());
       let avariableQuery: Query;
