@@ -37,7 +37,7 @@ export class QueryService {
       total: await this.prisma.query.count(),
       totalPending: await this.prisma.query.count({
         where: {
-          status: QueryStatus.PENDING,
+          status: QueryStatus.NOT_AVAILABLE,
         },
       }),
       totalTimeOut: await this.prisma.query.count({

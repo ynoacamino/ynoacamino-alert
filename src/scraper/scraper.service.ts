@@ -5,7 +5,7 @@ import { QueryStatus } from 'src/query/query.entity';
 
 @Injectable()
 export class ScraperService {
-  private readonly PAGE_URL = 'http://extranet.unsa.edu.pe/sisacad/talonpago_pregrado_a_nuevo/';
+  private readonly PAGE_URL = 'http://extranet.unsa.edu.pe/sisacad/talonpago_pregrado_b_nuevo/';
 
   private readonly MATCH_WORD = 'SISTEMAS';
 
@@ -34,7 +34,7 @@ export class ScraperService {
         console.log('No match found', (new Date()).toLocaleString());
         this.prisma.query.create({
           data: {
-            status: QueryStatus.PENDING,
+            status: QueryStatus.NOT_AVAILABLE,
           },
         }).catch(console.error);
         return false;

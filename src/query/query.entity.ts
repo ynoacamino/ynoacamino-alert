@@ -13,8 +13,8 @@ export const querySchema = z.object({
 });
 
 export enum QueryStatus {
-  AVARILABLE = 'AVAILABLE',
-  PENDING = 'PENDING',
+  AVAILABLE = 'AVAILABLE',
+  NOT_AVAILABLE = 'NOT_AVAILABLE',
   TIMEOUT = 'TIMEOUT',
 }
 
