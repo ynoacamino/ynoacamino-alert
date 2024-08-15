@@ -53,6 +53,6 @@ export class DiscordjsService extends Client implements OnModuleInit {
   }
 
   async sendTimeOutMessage() {
-    await this.sendMessage(`❌ - La página de talon de pago demoro demasiado en responder - ${DiscordjsService.dateFormated()}`, true);
+    await this.sendMessage(`❌ - La página tardó demasiado en responder - ${DiscordjsService.dateFormated()}`, true);
   }
 }
