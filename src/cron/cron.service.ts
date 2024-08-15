@@ -4,6 +4,7 @@ import { PrismaService } from 'src/prisma/prisma.service';
 import { Query } from '@prisma/client';
 import { ScraperService } from 'src/scraper/scraper.service';
 import { ResendService } from 'src/resend/resend.service';
+import { DiscordjsService } from 'src/discordjs/discordjs.service';
 import { QueryStatus } from '../query/query.entity';
 
 @Injectable()
@@ -12,6 +13,7 @@ export class CronService implements OnModuleInit {
     private readonly prisma: PrismaService,
     private readonly scraperService: ScraperService,
     private readonly resendService: ResendService,
+    private readonly discordjs: DiscordjsService,
   ) {}
 
   async onModuleInit() {
@@ -36,6 +38,8 @@ export class CronService implements OnModuleInit {
         console.error(error);
         return;
       }
+
+      this.discordjs.sendAvailableMessage();
 
       await this.resendService.sendMails({ queryId: avariableQuery.id });
       task.stop();

@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import puppeteer from 'puppeteer';
+import { DiscordjsService } from 'src/discordjs/discordjs.service';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { QueryStatus } from 'src/query/query.entity';
 
@@ -9,10 +10,14 @@ export class ScraperService {
 
   private readonly MATCH_WORD = 'SISTEMAS';
 
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly discordjs: DiscordjsService,
+  ) {}
 
   async scrape(): Promise<boolean> {
     let contentText: string | undefined;
+
     try {
       const window = await puppeteer.launch({
         args: ['--no-sandbox', '--disable-setuid-sandbox'],
@@ -37,6 +42,9 @@ export class ScraperService {
             status: QueryStatus.NOT_AVAILABLE,
           },
         }).catch(console.error);
+
+        this.discordjs.sendNotAvailableMessage();
+
         return false;
       }
 
@@ -48,6 +56,8 @@ export class ScraperService {
             status: QueryStatus.TIMEOUT,
           },
         }).catch(console.error);
+
+        this.discordjs.sendTimeOutMessage();
       }
       return false;
     }
