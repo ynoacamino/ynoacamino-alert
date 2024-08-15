@@ -4,6 +4,8 @@ import { Client, Events } from 'discord.js';
 
 @Injectable()
 export class DiscordjsService extends Client implements OnModuleInit {
+  private lastDateMessage: Date;
+
   constructor() {
     super({
       intents: 3276799,
@@ -17,10 +19,13 @@ export class DiscordjsService extends Client implements OnModuleInit {
 
       this.sendMessage('Bot iniciado', true);
     });
+
+    this.lastDateMessage = new Date();
   }
 
   async onModuleInit() {
     this.login(process.env.DISCORD_TOKEN);
+    this.lastDateMessage = new Date();
   }
 
   static dateFormated() {
@@ -33,6 +38,12 @@ export class DiscordjsService extends Client implements OnModuleInit {
   }
 
   async sendMessage(msg: string, silent = false) {
+    if (Date.now() - this.lastDateMessage.getTime() < 1000 * 60 * 5) {
+      return;
+    }
+
+    this.lastDateMessage = new Date();
+
     const channel = this.channels.cache.get('1273349865572929637');
     if (channel && channel.isTextBased()) {
       await channel.send({
@@ -45,7 +56,7 @@ export class DiscordjsService extends Client implements OnModuleInit {
   }
 
   async sendAvailableMessage() {
-    await this.sendMessage(`✅ - El talon de pago esta disponible @everyone - ${DiscordjsService.dateFormated()}`, true);
+    await this.sendMessage(`✅ - El talon de pago esta disponible @everyone - ${DiscordjsService.dateFormated()}`);
   }
 
   async sendNotAvailableMessage() {
