@@ -12,11 +12,6 @@ export class DiscordjsService extends Client implements OnModuleInit {
     });
 
     this.on(Events.ClientReady, async () => {
-      // const channel = this.channels.cache.get('1273457558962835582');
-      // if (channel && channel.isTextBased()) {
-      //   await channel.send('@everyone Bot iniciado');
-      // }
-
       this.sendMessage('Bot iniciado', true);
     });
 
@@ -38,7 +33,7 @@ export class DiscordjsService extends Client implements OnModuleInit {
   }
 
   async sendMessage(msg: string, silent = false) {
-    if (Date.now() - this.lastDateMessage.getTime() < 1000 * 60 * 5) {
+    if (Date.now() - this.lastDateMessage.getTime() <= 1000 * 60 * 60 - 1000) {
       return;
     }
 
@@ -56,7 +51,7 @@ export class DiscordjsService extends Client implements OnModuleInit {
   }
 
   async sendAvailableMessage() {
-    await this.sendMessage(`✅ - El talon de pago esta disponible @everyone - ${DiscordjsService.dateFormated()}`);
+    await this.sendMessage(`✅ - El talon de pago esta disponible @everyone - ${DiscordjsService.dateFormated()} - http://extranet.unsa.edu.pe/sisacad/talonpago_pregrado_b_nuevo/`);
   }
 
   async sendNotAvailableMessage() {
