@@ -1,4 +1,4 @@
-import { Injectable, OnModuleInit } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import * as cron from 'node-cron';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { Query } from '@prisma/client';
@@ -8,17 +8,13 @@ import { DiscordjsService } from 'src/discordjs/discordjs.service';
 import { QueryStatus } from '../query/query.entity';
 
 @Injectable()
-export class CronService implements OnModuleInit {
+export class CronService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly scraperService: ScraperService,
     private readonly resendService: ResendService,
     private readonly discordjs: DiscordjsService,
   ) {}
-
-  async onModuleInit() {
-    this.start();
-  }
 
   start() {
     const task = cron.schedule('*/1 * * * *', async () => {
