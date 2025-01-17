@@ -1,26 +1,26 @@
 import { format } from '@formkit/tempo';
-import { Injectable, OnModuleInit } from '@nestjs/common';
-import { Client, Events } from 'discord.js';
+import { Injectable } from '@nestjs/common';
+import { SendType } from './discordjs.entity';
 
 @Injectable()
-export class DiscordjsService extends Client implements OnModuleInit {
-  private lastDateMessage: Date;
+export class DiscordjsService {
+  static CHANNEL_ID = '1273349865572929637';
 
-  constructor() {
-    super({
-      intents: 3276799,
-    });
+  static async sendMessage(message: string, sendType: SendType) {
+    const body = {
+      message,
+      sendType,
+      channelId: this.CHANNEL_ID,
+    };
 
-    this.on(Events.ClientReady, async () => {
-      this.sendMessage('Bot iniciado', true);
-    });
-
-    this.lastDateMessage = new Date();
-  }
-
-  async onModuleInit() {
-    this.login(process.env.DISCORD_TOKEN);
-    this.lastDateMessage = new Date();
+    try {
+      await fetch('https://bot.ynoacamino.site/send', {
+        method: 'POST',
+        body: JSON.stringify(body),
+      });
+    } catch (error) {
+      console.error(error);
+    }
   }
 
   static dateFormated() {
@@ -32,33 +32,24 @@ export class DiscordjsService extends Client implements OnModuleInit {
     });
   }
 
-  async sendMessage(msg: string, silent = false) {
-    if (Date.now() - this.lastDateMessage.getTime() <= 1000 * 60 * 60 - 1000) {
-      return;
-    }
-
-    this.lastDateMessage = new Date();
-
-    const channel = this.channels.cache.get('1273349865572929637');
-    if (channel && channel.isTextBased()) {
-      await channel.send({
-        content: msg,
-        flags: silent ? [4096] : [],
-      });
-    } else {
-      console.error('Channel not found');
-    }
+  static async sendAvailableMessage() {
+    await this.sendMessage(
+      `✅ - El talon de pago esta disponible @everyone - ${DiscordjsService.dateFormated()} - http://extranet.unsa.edu.pe/sisacad/talonpago_pregrado_b_nuevo/`,
+      SendType.NORMAL,
+    );
   }
 
-  async sendAvailableMessage() {
-    await this.sendMessage(`✅ - El talon de pago esta disponible @everyone - ${DiscordjsService.dateFormated()} - http://extranet.unsa.edu.pe/sisacad/talonpago_pregrado_b_nuevo/`);
+  static async sendNotAvailableMessage() {
+    await this.sendMessage(
+      `⌛ - El talon de pago aun no esta disponible - ${DiscordjsService.dateFormated()}`,
+      SendType.SILENT,
+    );
   }
 
-  async sendNotAvailableMessage() {
-    await this.sendMessage(`⌛ - El talon de pago aun no esta disponible - ${DiscordjsService.dateFormated()}`, true);
-  }
-
-  async sendTimeOutMessage() {
-    await this.sendMessage(`❌ - La página tardó demasiado en responder - ${DiscordjsService.dateFormated()}`, true);
+  static async sendTimeOutMessage() {
+    await this.sendMessage(
+      `❌ - La página tardó demasiado en responder - ${DiscordjsService.dateFormated()}`,
+      SendType.SILENT,
+    );
   }
 }

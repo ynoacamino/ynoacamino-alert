@@ -5,13 +5,12 @@ import { QueryStatus } from 'src/query/query.entity';
 
 @Injectable()
 export class ScraperService {
-  private readonly PAGE_URL = 'http://extranet.unsa.edu.pe/sisacad/talonpago_pregrado_b_nuevo/';
+  private readonly PAGE_URL = 'http://extranet.unsa.edu.pe/sisacad/talonpago_pregrado_a_nuevo/';
 
   private readonly MATCH_WORD = 'sistemas';
 
   constructor(
     private readonly prisma: PrismaService,
-    private readonly discordjs: DiscordjsService,
   ) {}
 
   async scrape(): Promise<boolean> {
@@ -46,7 +45,7 @@ export class ScraperService {
           },
         }).catch(console.error);
 
-        this.discordjs.sendNotAvailableMessage();
+        DiscordjsService.sendNotAvailableMessage();
 
         return false;
       }
@@ -60,7 +59,7 @@ export class ScraperService {
           },
         }).catch(console.error);
 
-        this.discordjs.sendTimeOutMessage();
+        DiscordjsService.sendTimeOutMessage();
       }
       return false;
     }

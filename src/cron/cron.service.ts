@@ -13,7 +13,6 @@ export class CronService {
     private readonly prisma: PrismaService,
     private readonly scraperService: ScraperService,
     private readonly resendService: ResendService,
-    private readonly discordjs: DiscordjsService,
   ) {}
 
   start() {
@@ -35,7 +34,7 @@ export class CronService {
         return;
       }
 
-      this.discordjs.sendAvailableMessage();
+      DiscordjsService.sendAvailableMessage();
 
       await this.resendService.sendMails({ queryId: avariableQuery.id });
       task.stop();
