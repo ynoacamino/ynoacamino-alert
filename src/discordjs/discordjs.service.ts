@@ -7,6 +7,8 @@ export class DiscordjsService {
   static CHANNEL_ID = '1273349865572929637';
 
   static async sendMessage(message: string, sendType: SendType) {
+    console.log('Enviando un mensaje');
+
     const body = {
       message,
       sendType,
@@ -16,6 +18,9 @@ export class DiscordjsService {
     try {
       await fetch('https://bot.ynoacamino.site/send', {
         method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
         body: JSON.stringify(body),
       });
     } catch (error) {
