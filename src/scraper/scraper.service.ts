@@ -29,8 +29,6 @@ export class ScraperService {
 
       contentText = contentText.slice(i, j);
 
-      console.log(contentText);
-
       const match = contentText.includes(this.MATCH_WORD);
 
       if (!contentText) {
@@ -50,7 +48,7 @@ export class ScraperService {
         return false;
       }
 
-      await window.close();
+      window.close();
     } catch (error: any) {
       if (error.message !== 'No se encontró el elemento') {
         this.prisma.query.create({

@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, OnModuleInit } from '@nestjs/common';
 import * as cron from 'node-cron';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { Query } from '@prisma/client';
@@ -8,12 +8,12 @@ import { DiscordjsService } from 'src/discordjs/discordjs.service';
 import { QueryStatus } from '../query/query.entity';
 
 @Injectable()
-export class CronService {
+export class CronService implements OnModuleInit {
   constructor(
     private readonly prisma: PrismaService,
     private readonly scraperService: ScraperService,
     private readonly resendService: ResendService,
-  ) {}
+  ) { }
 
   start() {
     const task = cron.schedule('*/1 * * * *', async () => {
@@ -21,7 +21,6 @@ export class CronService {
 
       if (!match) return;
 
-      console.log('Match found', (new Date()).toLocaleString());
       let avariableQuery: Query;
       try {
         avariableQuery = await this.prisma.query.create({
@@ -39,5 +38,9 @@ export class CronService {
       await this.resendService.sendMails({ queryId: avariableQuery.id });
       task.stop();
     });
+  }
+
+  onModuleInit() {
+    this.start();
   }
 }
