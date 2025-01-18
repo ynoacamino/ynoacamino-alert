@@ -38,6 +38,8 @@ RUN apk add --no-cache \
     libc6-compat
 COPY --chown=node:node --from=build /usr/src/app/node_modules ./node_modules
 COPY --chown=node:node --from=build /usr/src/app/dist ./dist
+RUN mkdir ./src
+COPY --chown=node:node --from=build /usr/src/app/src/prisma ./src/prisma
 USER node
 
 EXPOSE 3000
