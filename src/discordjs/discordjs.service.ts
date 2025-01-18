@@ -1,10 +1,22 @@
 import { format } from '@formkit/tempo';
-import { Injectable } from '@nestjs/common';
+import { Injectable, OnModuleInit } from '@nestjs/common';
 import { SendType } from './discordjs.entity';
 
 @Injectable()
-export class DiscordjsService {
+export class DiscordjsService implements OnModuleInit {
+  private lastDateMessage: Date;
+
   static CHANNEL_ID = '1273349865572929637';
+
+  static TIME_OUT = 1000 * 60 * 60 - 100;
+
+  constructor() {
+    this.lastDateMessage = new Date();
+  }
+
+  async onModuleInit() {
+    this.lastDateMessage = new Date();
+  }
 
   static async sendMessage(message: string, sendType: SendType) {
     console.log('Enviando un mensaje');
@@ -44,17 +56,32 @@ export class DiscordjsService {
     );
   }
 
-  static async sendNotAvailableMessage() {
-    await this.sendMessage(
-      `⌛ - El talon de pago aun no esta disponible - ${DiscordjsService.dateFormated()}`,
-      SendType.SILENT,
+  async bounceSendMessage(funcSendMessage: Promise<void>, time: number) {
+    if (Date.now() - this.lastDateMessage.getTime() <= time) {
+      return;
+    }
+
+    this.lastDateMessage = new Date();
+    await funcSendMessage;
+  }
+
+  async sendNotAvailableMessage() {
+    this.bounceSendMessage(
+      DiscordjsService.sendMessage(
+        `❌ - El talon de pago no esta disponible @everyone - ${DiscordjsService.dateFormated()}`,
+        SendType.NORMAL,
+      ),
+      DiscordjsService.TIME_OUT,
     );
   }
 
-  static async sendTimeOutMessage() {
-    await this.sendMessage(
-      `❌ - La página tardó demasiado en responder - ${DiscordjsService.dateFormated()}`,
-      SendType.SILENT,
+  async sendTimeOutMessage() {
+    this.bounceSendMessage(
+      DiscordjsService.sendMessage(
+        `❌ - La página tardó demasiado en responder - ${DiscordjsService.dateFormated()}`,
+        SendType.SILENT,
+      ),
+      DiscordjsService.TIME_OUT,
     );
   }
 }
