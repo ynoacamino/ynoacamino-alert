@@ -39,7 +39,7 @@ RUN apk add --no-cache \
 COPY --chown=node:node --from=build /usr/src/app/node_modules ./node_modules
 COPY --chown=node:node --from=build /usr/src/app/dist ./dist
 RUN mkdir ./src
-COPY --chown=node:node --from=build /usr/src/app/src/prisma ./src/prisma
+COPY --chown=node:node --from=build /usr/src/app/prisma ./prisma
 USER node
 
 EXPOSE 3000
