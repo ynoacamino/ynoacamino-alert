@@ -7,7 +7,7 @@ generator client {
 
 datasource db {
   provider = "sqlite"
-  url      = "file:./data.db"
+  url      = "file:./data/data.db"
 }
 
 model Query {
@@ -15,24 +15,24 @@ model Query {
   createdAt DateTime @default(now())
   status    String
 
-  messages  Message[]
+  messages Message[]
 }
 
 model Message {
-  id        Int      @id @default(autoincrement())
-  createdAt DateTime @default(now())
-  queryId   Int
+  id            Int      @id @default(autoincrement())
+  createdAt     DateTime @default(now())
+  queryId       Int
   mailAddressId Int
 
   mailAddress MailAddress @relation(fields: [mailAddressId], references: [id])
-  query     Query    @relation(fields: [queryId], references: [id])
+  query       Query       @relation(fields: [queryId], references: [id])
 }
 
 model MailAddress {
   id        Int      @id @default(autoincrement())
   createdAt DateTime @default(now())
-  address   String  @unique()
-  active    Boolean @default(true)
+  address   String   @unique()
+  active    Boolean  @default(true)
 
-  messages  Message[]
+  messages Message[]
 }
