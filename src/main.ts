@@ -10,7 +10,7 @@ async function bootstrap() {
   const port = Number(process.env.PORT) || 3000;
 
   app.enableCors({
-    origin: 'alert.ynoacamino.site',
+    origin: 'https://alert.ynoacamino.site',
     methods: '*',
     preflightContinue: false,
     optionsSuccessStatus: 204,
