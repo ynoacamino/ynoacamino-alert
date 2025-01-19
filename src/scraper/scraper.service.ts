@@ -11,6 +11,7 @@ export class ScraperService {
 
   constructor(
     private readonly prisma: PrismaService,
+    private readonly discordjsService: DiscordjsService,
   ) {}
 
   async scrape(): Promise<boolean> {
@@ -43,7 +44,7 @@ export class ScraperService {
           },
         }).catch(console.error);
 
-        DiscordjsService.sendNotAvailableMessage();
+        this.discordjsService.sendNotAvailableMessage();
 
         return false;
       }
@@ -57,7 +58,7 @@ export class ScraperService {
           },
         }).catch(console.error);
 
-        DiscordjsService.sendTimeOutMessage();
+        this.discordjsService.sendTimeOutMessage();
       }
       return false;
     }
