@@ -4,18 +4,18 @@ import { SendType } from './discordjs.entity';
 
 @Injectable()
 export class DiscordjsService implements OnModuleInit {
-  private lastDateMessage: Date;
+  private lastDateMessage: number;
 
   static CHANNEL_ID = '1273349865572929637';
 
   static TIME_OUT = 1000 * 60 * 60 - 100;
 
   constructor() {
-    this.lastDateMessage = new Date();
+    this.lastDateMessage = Date.now();
   }
 
   async onModuleInit() {
-    this.lastDateMessage = new Date();
+    this.lastDateMessage = Date.now();
   }
 
   static async sendMessage(message: string, sendType: SendType) {
@@ -24,7 +24,7 @@ export class DiscordjsService implements OnModuleInit {
     const body = {
       message,
       sendType,
-      channelId: this.CHANNEL_ID,
+      channelId: DiscordjsService.CHANNEL_ID,
     };
 
     try {
@@ -51,36 +51,40 @@ export class DiscordjsService implements OnModuleInit {
 
   static async sendAvailableMessage() {
     await this.sendMessage(
-      `✅ - El talon de pago esta disponible @everyone - ${DiscordjsService.dateFormated()} - http://extranet.unsa.edu.pe/sisacad/talonpago_pregrado_b_nuevo/`,
+      `✅ - El talon de pago esta disponible @everyone - ${DiscordjsService.dateFormated()} - http://extranet.unsa.edu.pe/sisacad/talonpago_pregrado_a_nuevo/`,
       SendType.NORMAL,
     );
   }
 
-  async bounceSendMessage(funcSendMessage: Promise<void>, time: number) {
-    if (Date.now() - this.lastDateMessage.getTime() <= time) {
+  async bounceSendMessage(funcSendMessage: () => Promise<void>, time: number) {
+    if (Date.now() - this.lastDateMessage <= time) {
       return;
     }
 
-    this.lastDateMessage = new Date();
-    await funcSendMessage;
+    this.lastDateMessage = Date.now();
+    await funcSendMessage();
   }
 
   async sendNotAvailableMessage() {
     this.bounceSendMessage(
-      DiscordjsService.sendMessage(
-        `❌ - El talon de pago no esta disponible @everyone - ${DiscordjsService.dateFormated()}`,
-        SendType.NORMAL,
-      ),
+      async () => {
+        DiscordjsService.sendMessage(
+          `⌛ - El talon de pago aun no esta disponible - ${DiscordjsService.dateFormated()}`,
+          SendType.SILENT,
+        );
+      },
       DiscordjsService.TIME_OUT,
     );
   }
 
   async sendTimeOutMessage() {
     this.bounceSendMessage(
-      DiscordjsService.sendMessage(
-        `❌ - La página tardó demasiado en responder - ${DiscordjsService.dateFormated()}`,
-        SendType.SILENT,
-      ),
+      async () => {
+        DiscordjsService.sendMessage(
+          `❌ - La página tardó demasiado en responder - ${DiscordjsService.dateFormated()}`,
+          SendType.SILENT,
+        );
+      },
       DiscordjsService.TIME_OUT,
     );
   }
