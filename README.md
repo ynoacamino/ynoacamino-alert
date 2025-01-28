@@ -1,73 +1,188 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="200" alt="Nest Logo" /></a>
-</p>
+# 📄 Sistema de Monitoreo de Talón de Pago - UNSA 🚀
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+Este repositorio contiene un sistema automatizado desarrollado con **NestJS**, diseñado para realizar scraping de la página de disponibilidad del talón de pago para la matrícula del semestre 2025A de la **Universidad Nacional de San Agustín (UNSA)**. El sistema monitorea continuamente la disponibilidad de los talones y envía notificaciones por correo electrónico y mensajes de Discord en caso de cambios detectados.
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+---
 
-## Description
+## 🚀 Descripción
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+Este sistema tiene las siguientes funcionalidades principales:
 
-## Installation
+- **Scraping de disponibilidad:** Consulta periódica de la página oficial de talones de pago de la UNSA para verificar si los talones de la carrera de Ingeniería de Sistemas están disponibles.
+- **Notificaciones automatizadas:** Envía notificaciones a través de:
+  - **Correo electrónico:** A todas las direcciones registradas.
+  - **Discord:** Mensajes directos a un canal configurado, notificando cambios en el estado.
+- **Gestión de consultas:** Guarda un historial de las consultas realizadas, incluyendo estados como:
+  - **Disponible:** Cuando se detecta la palabra clave "sistemas".
+  - **No disponible:** Si no se encuentra la palabra clave.
+  - **Timeout:** En caso de errores durante el scraping.
+- **Contenerización y CI/CD:** Utiliza Docker para contenerización y GitHub Actions para la automatización del despliegue en múltiples plataformas.
+
+
+---
+
+## 📂 Estructura del Proyecto
 
 ```bash
-$ npm install
+src/
+├── mail/                  # Módulo para gestión de direcciones de correo
+├── query/                 # Módulo para consultas y estado de disponibilidad
+├── prisma/                # Configuración y servicios de Prisma ORM
+├── resend/                # Módulo de envío de correos
+├── scraper/               # Módulo de scraping de información
+├── discordjs/             # (Opcional) Enlace con Discord.js para notificaciones
+├── app.module.ts          # Módulo principal de la aplicación
+└── ...
+prisma/
+├── schema.prisma          # Definición del esquema de base de datos
+.github/workflows/
+├── docker-publish.yml     # Configuración de CI/CD con Docker y GitHub Actions
 ```
 
-## Running the app
+![Estructura del Proyecto](https://ynoa-uploader.ynoacamino.site/uploads/1738104601_Untitled-2024-11-30-1525%20%282%29.png)
 
-```bash
-# development
-$ npm run start
+---
 
-# watch mode
-$ npm run start:dev
+## 🛠 Módulos y Funcionalidades
 
-# production mode
-$ npm run start:prod
+### **Mail Module**
+Gestiona direcciones de correo en la base de datos.
+- **Controlador:** `MailController`.
+- **Servicios:** `MailService`.
+
+Operaciones principales:
+- Crear una nueva dirección.
+- Obtener todas las direcciones o una dirección específica.
+- Cambiar el estado activo de una dirección.
+
+---
+
+### **Query Module**
+Registra y consulta el estado de ciertas acciones o eventos.
+- **Controlador:** `QueryController`.
+- **Servicios:** `QueryService`.
+
+Operaciones principales:
+- Registrar el estado de una consulta (disponible, no disponible o timeout).
+- Obtener información general sobre el total de consultas y su distribución.
+
+---
+
+### **Scraper Module**
+Realiza scraping de contenido en una página web.
+- **Servicio:** `ScraperService`.
+
+Operaciones principales:
+- Descarga y analiza el HTML de la página objetivo.
+- Busca coincidencias con una palabra clave definida (“sistemas”).
+- Registra el estado de la consulta según los resultados (“AVAILABLE”, “NOT_AVAILABLE”, “TIMEOUT”).
+
+---
+
+### **Resend Module**
+Gestiona el envío de correos electrónicos utilizando la biblioteca Resend.
+- **Servicio:** `ResendService`.
+
+Operaciones principales:
+- Enviar correos electrónicos a todas las direcciones registradas en la base de datos.
+- Registrar los mensajes enviados en la base de datos.
+
+---
+
+### **Prisma Module**
+Proporciona servicios para interactuar con la base de datos mediante Prisma ORM.
+- **Servicio:** `PrismaService`.
+
+Operaciones principales:
+- Conexión y gestión de transacciones con la base de datos.
+
+---
+
+## 🌐 Endpoints Principales
+
+### **MailController**
+- `GET /mail`: Obtiene todas las direcciones de correo.
+- `POST /mail`: Crea una nueva dirección.
+- `PATCH /mail`: Cambia el estado activo de una dirección.
+
+### **QueryController**
+- `GET /query`: Obtiene todas las consultas o una sección específica.
+- `POST /query`: Registra una nueva consulta.
+
+---
+
+## ⚙️ Configuración
+
+### Variables de entorno
+
+Asegúrate de definir las siguientes variables en un archivo `.env`:
+
+```env
+RESEND_API_KEY=tu_clave_resend
+DISCORD_TOKEN=tu_token_discord
+DATABASE_URL=tu_url_de_base_de_datos
 ```
 
-## Test
+---
 
-```bash
-# unit tests
-$ npm run test
+## 🛠 Instrucciones de Uso
 
-# e2e tests
-$ npm run test:e2e
+1. **Clona el repositorio:**
 
-# test coverage
-$ npm run test:cov
-```
+    ```bash
+    git clone https://github.com/tu_usuario/tu_repositorio.git
+    ```
 
-## Support
+2. **Instala las dependencias:**
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+    ```bash
+    npm install
+    ```
 
-## Stay in touch
+3. **Inicializa la base de datos:**
 
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+    ```bash
+    npx prisma migrate dev
+    ```
 
-## License
+4. **Inicia el servidor:**
 
-Nest is [MIT licensed](LICENSE).
+    ```bash
+    npm run start
+    ```
+
+---
+
+## 🐳 Contenerización con Docker
+
+1. **Construir la imagen:**
+
+    ```bash
+    docker build -t mail-notification-system .
+    ```
+
+2. **Ejecutar el contenedor:**
+
+    ```bash
+    docker run -p 3000:3000 mail-notification-system
+    ```
+
+---
+
+## 🤖 Automatización CI/CD
+
+El archivo `.github/workflows/docker-publish.yml` está configurado para:
+- Construir y publicar la imagen de Docker en Docker Hub y GitHub Container Registry.
+- Compatible con arquitecturas `amd64` y `arm64`.
+
+---
+
+## 📚 Recursos Utilizados
+
+- **NestJS**: Framework para aplicaciones de servidor.
+- **Prisma**: ORM para Node.js.
+- **Resend**: Biblioteca para envío de correos.
+- **TypeScript**: Lenguaje tipado.
+- **Docker**: Contenerización.
+- **GitHub Actions**: Automatización de flujos de trabajo.
+
