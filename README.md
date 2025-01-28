@@ -36,7 +36,7 @@ prisma/
 ├── docker-publish.yml     # Configuración de CI/CD con Docker y GitHub Actions
 ```
 
-![Estructura del Proyecto](https://ynoa-uploader.ynoacamino.site/uploads/1738104601_Untitled-2024-11-30-1525%20%282%29.png)
+![Estructura del Proyecto](https://ynoa-uploader.ynoacamino.site/uploads/1738105025_Untitled-2024-11-30-1525%20%283%29.png)
 
 
 ## 🛠 Módulos y Funcionalidades
