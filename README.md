@@ -1,4 +1,4 @@
-# 📄 Sistema de Monitoreo de Talón de Pago - UNSA 🚀
+# 📄 Sistema de Monitoreo de Talón de Pago - UNSA
 
 Este repositorio contiene un sistema automatizado desarrollado con **NestJS**, diseñado para realizar scraping de la página de disponibilidad del talón de pago para la matrícula del semestre 2025A de la **Universidad Nacional de San Agustín (UNSA)**. El sistema monitorea continuamente la disponibilidad de los talones y envía notificaciones por correo electrónico y mensajes de Discord en caso de cambios detectados.
 
@@ -120,7 +120,7 @@ DATABASE_URL=tu_url_de_base_de_datos
 1. **Clona el repositorio:**
 
     ```bash
-    git clone https://github.com/tu_usuario/tu_repositorio.git
+    git clone https://github.com/ynoacamino/ynoacamino-alert.git
     ```
 
 2. **Instala las dependencias:**
@@ -147,13 +147,13 @@ DATABASE_URL=tu_url_de_base_de_datos
 1. **Construir la imagen:**
 
     ```bash
-    docker build -t mail-notification-system .
+    docker build -t ynoacamino/ynoacamino-alert .
     ```
 
 2. **Ejecutar el contenedor:**
 
     ```bash
-    docker run -p 3000:3000 mail-notification-system
+    docker run -p 3000:3000 ynoacamino/ynoacamino-alert
     ```
 
 
