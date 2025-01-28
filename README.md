@@ -2,7 +2,6 @@
 
 Este repositorio contiene un sistema automatizado desarrollado con **NestJS**, diseñado para realizar scraping de la página de disponibilidad del talón de pago para la matrícula del semestre 2025A de la **Universidad Nacional de San Agustín (UNSA)**. El sistema monitorea continuamente la disponibilidad de los talones y envía notificaciones por correo electrónico y mensajes de Discord en caso de cambios detectados.
 
----
 
 ## 🚀 Descripción
 
@@ -18,8 +17,6 @@ Este sistema tiene las siguientes funcionalidades principales:
   - **Timeout:** En caso de errores durante el scraping.
 - **Contenerización y CI/CD:** Utiliza Docker para contenerización y GitHub Actions para la automatización del despliegue en múltiples plataformas.
 
-
----
 
 ## 📂 Estructura del Proyecto
 
@@ -41,7 +38,6 @@ prisma/
 
 ![Estructura del Proyecto](https://ynoa-uploader.ynoacamino.site/uploads/1738104601_Untitled-2024-11-30-1525%20%282%29.png)
 
----
 
 ## 🛠 Módulos y Funcionalidades
 
@@ -55,7 +51,7 @@ Operaciones principales:
 - Obtener todas las direcciones o una dirección específica.
 - Cambiar el estado activo de una dirección.
 
----
+ 
 
 ### **Query Module**
 Registra y consulta el estado de ciertas acciones o eventos.
@@ -66,7 +62,6 @@ Operaciones principales:
 - Registrar el estado de una consulta (disponible, no disponible o timeout).
 - Obtener información general sobre el total de consultas y su distribución.
 
----
 
 ### **Scraper Module**
 Realiza scraping de contenido en una página web.
@@ -77,7 +72,6 @@ Operaciones principales:
 - Busca coincidencias con una palabra clave definida (“sistemas”).
 - Registra el estado de la consulta según los resultados (“AVAILABLE”, “NOT_AVAILABLE”, “TIMEOUT”).
 
----
 
 ### **Resend Module**
 Gestiona el envío de correos electrónicos utilizando la biblioteca Resend.
@@ -87,7 +81,6 @@ Operaciones principales:
 - Enviar correos electrónicos a todas las direcciones registradas en la base de datos.
 - Registrar los mensajes enviados en la base de datos.
 
----
 
 ### **Prisma Module**
 Proporciona servicios para interactuar con la base de datos mediante Prisma ORM.
@@ -96,7 +89,6 @@ Proporciona servicios para interactuar con la base de datos mediante Prisma ORM.
 Operaciones principales:
 - Conexión y gestión de transacciones con la base de datos.
 
----
 
 ## 🌐 Endpoints Principales
 
@@ -109,7 +101,6 @@ Operaciones principales:
 - `GET /query`: Obtiene todas las consultas o una sección específica.
 - `POST /query`: Registra una nueva consulta.
 
----
 
 ## ⚙️ Configuración
 
@@ -123,7 +114,6 @@ DISCORD_TOKEN=tu_token_discord
 DATABASE_URL=tu_url_de_base_de_datos
 ```
 
----
 
 ## 🛠 Instrucciones de Uso
 
@@ -151,7 +141,6 @@ DATABASE_URL=tu_url_de_base_de_datos
     npm run start
     ```
 
----
 
 ## 🐳 Contenerización con Docker
 
@@ -167,7 +156,6 @@ DATABASE_URL=tu_url_de_base_de_datos
     docker run -p 3000:3000 mail-notification-system
     ```
 
----
 
 ## 🤖 Automatización CI/CD
 
@@ -175,7 +163,6 @@ El archivo `.github/workflows/docker-publish.yml` está configurado para:
 - Construir y publicar la imagen de Docker en Docker Hub y GitHub Container Registry.
 - Compatible con arquitecturas `amd64` y `arm64`.
 
----
 
 ## 📚 Recursos Utilizados
 
