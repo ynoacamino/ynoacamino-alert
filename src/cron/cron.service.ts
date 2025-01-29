@@ -41,6 +41,6 @@ export class CronService implements OnModuleInit {
   }
 
   onModuleInit() {
-    this.start();
+    // this.start();
   }
 }
