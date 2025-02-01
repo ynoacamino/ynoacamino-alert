@@ -12,7 +12,7 @@
     "start": "node ./dist/main.js",
     "dev": "nest start --watch",
     "debug": "nest start --debug --watch",
-    "start:prisma": "prisma migrate dev --name init && node ./dist/main.js",
+    "start:prisma": "prisma migrate deploy && node ./dist/main.js"
     "start:prod": "node dist/main",
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix"
   },
